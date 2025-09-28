@@ -50,9 +50,6 @@
 **Fora do MVP (elegível a evolução)**
 - **Mapa interativo**; **notificações push**; **relatórios/dashboards**; **fluxo de adoção avançado** (triagem, termos, anexos).
 
-**Não escopo**
-- Integrações pagas/complexas não essenciais ao MVP.
-
 ---
 
 ## Papéis e Perfis de Acesso
@@ -66,7 +63,7 @@
 
 ---
 
-## Requisitos Funcionais (detalhados)
+## Requisitos Funcionais
 
 ### RF-001 — Home (Início)
 **Descrição:** Página inicial com missão, CTA “Apoie nossa causa”, destaques de cães e indicador de resultados do mês.  
