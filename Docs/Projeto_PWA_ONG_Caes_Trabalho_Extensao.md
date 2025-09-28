@@ -1,8 +1,4 @@
 # PROJETO PWA – ONG DE CÃES (TRABALHO DE EXTENSÃO)
-**Versão:** 1.0 (ajustes conforme diretrizes 1–13)  
-**Idioma:** pt-BR (único)
-
-> Observação: Este documento **mantém tudo que já existia** e **acrescenta/ajusta** detalhes solicitados. Numeração segue o checklist anterior para rastreabilidade. O item **14 – não aplicável** conforme orientação.
 
 ---
 
