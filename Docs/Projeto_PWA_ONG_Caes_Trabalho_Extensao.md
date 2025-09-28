@@ -1,8 +1,8 @@
-# PROJETO PWA – ONG DE CÃES (TRABALHO DE EXTENSÃO)
+# PROJETO PWA – ONG DE CÃES
 
 ---
 
-## 0) Visão Geral (mantida)
+## 0) Visão Geral
 **Objetivo geral:** Construir um PWA para uma ONG de proteção animal (cães), priorizando **adoção**, **doações (PIX/itens)**, **histórias/resultados**, **parceiros** e **voluntariado/lar temporário**.  
 **Dados:** Firestore. **Imagens:** Cloud Storage (teto operacional **5 GB**). **Auth:** Firebase Auth (admin). **Admin:** **feature flags** por seção.  
 **MVP público:** Início, Adoção (lista/detalhe), Doações, Histórias/Resultados, Parceiros, Voluntário.  
@@ -10,7 +10,7 @@
 
 ---
 
-## 1) Decisões de stack e padrões (DEFINIDO)
+## 1) Decisões de stack e padrões
 - **Framework:** **React 18 + Vite + TypeScript** (PT-BR apenas).
 - **UI kit:** **Tailwind CSS** + **Radix UI** (primitivos acessíveis) + **Lucide** (ícones).
 - **Gerência de estado:** React Query (fetch/cache) + Context para flags/usuário admin.
@@ -37,7 +37,7 @@
 
 ---
 
-## Configuração do Firebase (Setup do Zero)
+## Configuração do Firebase
 
 ### Criação de projetos
 - `ong-caes-dev` (desenvolvimento)  
@@ -87,14 +87,14 @@ service firebase.storage {
 }
 ```
 
-### Estrutura de dados inicial (semente)
+### Estrutura de dados inicial
 - `/flags`: `{ adoption: true, donations: true, lostPets: false, partners: true, stories: true, volunteers: true }`  
 - `/settings`: `{ contact: "email/whatsapp", pixKey: "chave pix", donationNotes: "texto opcional" }`  
 - `/dogs`: 2–3 cães exemplo  
 - `/posts`: 2 posts exemplo  
 - `/partners`: 2 parceiros exemplo  
 
-## 2) Branding e design de UI (CRIADO)
+## 2) Branding e design de UI
 - **Conceito:** natureza + cuidado. Paleta inspirada em **verde** (confiança/vida), **terra** (acolhimento) e **azul-acqua** (esperança). Contraste AA.
 - **Paleta (hex):**
   - Primária: `#2E7D32` (verde ONG) / hover `#27692B`
@@ -109,7 +109,7 @@ service firebase.storage {
 
 ---
 
-## 3) Itens criados de UI (kits & páginas – PRONTO)
+## 3) Itens criados de UI
 - **Design tokens:** cores, espaçamentos (4/8/12/16px), radius 12–16px, sombras suaves.  
 - **Páginas:** 
   - **Início:** hero + CTA, “Ajudamos X animais este mês”, destaques de cães (6).  
@@ -122,7 +122,7 @@ service firebase.storage {
 
 ---
 
-## 4) Boas práticas e definições (DEFINIDO)
+## 4) Boas práticas e definições
 - **Acessibilidade:** foco visível; labels/aria; contraste AA; navegação por teclado.  
 - **Responsividade:** mobile-first; breakpoints Tailwind default.  
 - **Desempenho:** LCP ≤ 2.5s; CLS ≤ 0.1; JS inicial ≤ 180KB gzip; imagens **WebP** quando possível; lazy-loading.  
@@ -132,7 +132,7 @@ service firebase.storage {
 
 ---
 
-## 5) Firebase – configuração (SEGUIR RECOMENDAÇÕES)
+## 5) Firebase – configuração
 - **Ambientes:** `dev` e `prod` (dois projetos Firebase).  
 - **Variáveis (.env):** `VITE_FB_API_KEY`, `VITE_FB_AUTH_DOMAIN`, `VITE_FB_PROJECT_ID`, `VITE_FB_STORAGE_BUCKET`, `VITE_FB_APP_ID`.  
 - **Firestore (coleções – mantidas):** `flags`, `dogs`, `posts`, `partners`, `results`, `leads_adoption`, `leads_volunteer`, `settings`.  
@@ -147,7 +147,7 @@ service firebase.storage {
 
 ---
 
-## 6) Modelo de dados e tipos TypeScript (DEFINIDO)
+## 6) Modelo de dados e tipos TypeScript
 ```ts
 export type DogSize = 'P' | 'M' | 'G';
 export type DogStatus = 'disponível' | 'adotado' | 'indisponível';
@@ -186,7 +186,7 @@ export interface Settings { contact: string; pixKey: string; donationNotes?: str
 
 ---
 
-## 7) Limites técnicos e alertas (AJUSTADO)
+## 7) Limites técnicos e alertas
 - **Teto de Storage:** **5 GB** (operacional).  
 - **Limite por foto (upload):** **máx. 5 MB** (validação no client e no Storage).  
 - **Máx. fotos por cão:** **3** (UI e schema reforçam).  
@@ -197,7 +197,7 @@ export interface Settings { contact: string; pixKey: string; donationNotes?: str
 
 ---
 
-## 8) Estados de UI, UX writing e criatividade (CRIADO)
+## 8) Estados de UI, UX writing e criatividade
 - **Estados globais:** `carregando` (skeleton), `vazio` (“Ainda não há registros aqui”), `erro` (“Não foi possível carregar. Tentar novamente?”).  
 - **Mensagens de sucesso:** “Recebemos sua mensagem. Em breve a ONG entra em contato.”  
 - **Doações:** “Sua ajuda salva vidas. Use a chave PIX abaixo.”  
@@ -208,7 +208,7 @@ export interface Settings { contact: string; pixKey: string; donationNotes?: str
 
 ---
 
-## 9) Rotas e navegação (FUNCIONAL E SIMPLES)
+## 9) Rotas e navegação
 - **Público:**
   - `/` (Início) • `/adocao` • `/adocao/:id` • `/doacoes` • `/historias` • `/parceiros` • `/voluntario`
 - **Admin (protegido por Auth + role):**
@@ -218,7 +218,7 @@ export interface Settings { contact: string; pixKey: string; donationNotes?: str
 
 ---
 
-## 10) PWA: Manifest e Service Worker (DEFINIDO)
+## 10) PWA: Manifest e Service Worker
 - **Manifest (exemplo):**
   ```json
   {
@@ -242,14 +242,14 @@ export interface Settings { contact: string; pixKey: string; donationNotes?: str
 
 ---
 
-## 11) Telemetria e métricas (FEITO)
+## 11) Telemetria e métricas
 - **GA4**: `view_dog`, `lead_adoption_sent`, `lead_volunteer_sent`, `pix_copy_click`, `donation_view`.  
 - **Sentry (opcional)**: captura de erros em produção.  
 - **Relatórios internos**: contagem semanal de leads; `results.helpedCount` mensal.
 
 ---
 
-## 12) CI/CD, domínio e ambientes (CRIADO)
+## 12) CI/CD, domínio e ambientes
 - **GitHub Actions**: jobs de `lint`, `typecheck`, `build` e `deploy` (Firebase Hosting).  
 - **Preview Channels** por PR para validação da ONG.  
 - **Segredos** no repositório para chaves Firebase/GA4/Sentry.  
@@ -258,7 +258,7 @@ export interface Settings { contact: string; pixKey: string; donationNotes?: str
 
 ---
 
-## 13) Administração e operação (DEFINIDO)
+## 13) Administração e operação
 - **Onboarding**: criar usuário admin semente (console) e registrar no guia.  
 - **Export CSV**: botão nos **Leads** (adoção/voluntário).  
 - **Limpeza de órfãos**: rotina mensal (manual) – ver lista de arquivos sem referência.  
@@ -267,7 +267,7 @@ export interface Settings { contact: string; pixKey: string; donationNotes?: str
 
 ---
 
-## 15) Riscos e mitigação (mantido)
+## 15) Riscos e mitigação
 - Estouro de Storage (5 GB) → compressão, 5MB por foto, máx. 3 fotos/cão, auditoria mensal.  
 - Leituras elevadas → paginação, cache React Query, índices.  
 - Conteúdo desatualizado → responsável editorial + calendário.
