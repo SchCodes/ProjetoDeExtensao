@@ -1,3 +1,9 @@
+---
+lang: pt-BR
+title: "PWA para ONG de Cães"
+date: 2025
+---
+
 # PWA para ONG de CÃ£es
 
 **InstituiÃ§Ã£o:** IFPR â€“ TelÃªmaco Borba  
