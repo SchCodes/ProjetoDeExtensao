@@ -1,281 +1,183 @@
-# PROJETO PWA – ONG DE CÃES
+# PWA para ONG de CÃ£es
 
----
+**InstituiÃ§Ã£o:** IFPR â€“ TelÃªmaco Borba  
+**Curso:** AnÃ¡lise e Desenvolvimento de Sistemas  
+**Modalidade:** Trabalho de ExtensÃ£o  
+**Autoria:** Equipe do Projeto  
+**Data:** 2025  
 
-## 0) Visão Geral
-**Objetivo geral:** Construir um PWA para uma ONG de proteção animal (cães), priorizando **adoção**, **doações (PIX/itens)**, **histórias/resultados**, **parceiros** e **voluntariado/lar temporário**.  
-**Dados:** Firestore. **Imagens:** Cloud Storage (teto operacional **5 GB**). **Auth:** Firebase Auth (admin). **Admin:** **feature flags** por seção.  
-**MVP público:** Início, Adoção (lista/detalhe), Doações, Histórias/Resultados, Parceiros, Voluntário.  
-**Futuro:** mapa interativo, push, relatórios, fluxo de adoção avançado.
+## 1. Resumo / SumÃ¡rio Executivo
+Este documento apresenta o projeto completo de um Progressive Web App (PWA) para uma ONG de proteÃ§Ã£o animal com foco em cÃ£es. O sistema visa ampliar adoÃ§Ãµes responsÃ¡veis, facilitar doaÃ§Ãµes financeiras e de itens, organizar voluntariado e promover transparÃªncia dos resultados. A soluÃ§Ã£o adota React (Vite + TypeScript) no frontâ€‘end e serviÃ§os do Firebase (Auth, Firestore, Cloud Storage e Hosting) no backâ€‘end, privilegiando baixo custo, simplicidade operacional e escalabilidade.  
+O projeto estÃ¡ estruturado em objetivos, escopo, requisitos funcionais e nÃ£o funcionais, modelagem de dados, arquitetura, configuraÃ§Ã£o do Firebase, diretrizes de design e usabilidade, operaÃ§Ã£o e manutenÃ§Ã£o, riscos e cronograma, compondo um artefato Ãºnico pronto para implementaÃ§Ã£o.
 
----
+## 2. IntroduÃ§Ã£o
+OrganizaÃ§Ãµes nÃ£o governamentais que resgatam e acolhem cÃ£es dependem de visibilidade, informaÃ§Ã£o confiÃ¡vel e facilidades para captar apoio. Um PWA, por funcionar em qualquer dispositivo e oferecer experiÃªncia semelhante Ã  de aplicativo, Ã© adequado a esse contexto. A adoÃ§Ã£o do Firebase como plataforma gerenciada permite que a equipe concentre esforÃ§os no valor social e na operaÃ§Ã£o cotidiana, minimizando a carga de infraestrutura.  
+Este projeto acadÃªmico documenta, de forma clara e verificÃ¡vel, o que serÃ¡ construÃ­do, em que ordem e com quais critÃ©rios de qualidade, servindo tanto Ã  avaliaÃ§Ã£o acadÃªmica quanto Ã  execuÃ§Ã£o tÃ©cnica.
 
-## 1) Decisões de stack e padrões
-- **Framework:** **React 18 + Vite + TypeScript** (PT-BR apenas).
-- **UI kit:** **Tailwind CSS** + **Radix UI** (primitivos acessíveis) + **Lucide** (ícones).
-- **Gerência de estado:** React Query (fetch/cache) + Context para flags/usuário admin.
-- **Formulários/validação:** **Zod** + **react-hook-form**.
-- **Padrões de código:** **ESLint** + **Prettier** + **Husky** (pre-commit) + **Commitlint** (Conventional Commits).
-- **Estrutura de pastas (sugerida):**
-  ```text
-  src/
-    components/        # UI reutilizável
-    features/          # domínios: adoption, donations, stories, partners, volunteer, admin
-    pages/             # rotas (Vite + react-router)
-    lib/               # firebase, api, utils
-    hooks/             # ganchos
-    types/             # TypeScript types/interfaces
-    styles/            # Tailwind base
-    config/            # constantes, flags default
-    assets/            # imagens estáticas (logo, ícones)
-  ```
-- **i18n:** **somente PT-BR** (sem estrutura multilíngue no MVP).
-- **Licenças/avisos:** MIT para o código do projeto (sugestão).
+## 3. Objetivos
 
----
+### 3.1 Objetivo Geral
+Desenvolver um PWA que facilite adoÃ§Ãµes, doaÃ§Ãµes e engajamento comunitÃ¡rio, fornecendo meios simples para gestÃ£o de conteÃºdo pela ONG.
 
+### 3.2 Objetivos EspecÃ­ficos
+- Divulgar cÃ£es para adoÃ§Ã£o com informaÃ§Ãµes suficientes para decisÃ£o responsÃ¡vel;
+- Reduzir barreiras para doaÃ§Ãµes (PIX e itens);
+- Organizar manifestaÃ§Ãµes de interesse em voluntariado e lar temporÃ¡rio;
+- Oferecer transparÃªncia por meio de histÃ³rias e resultados mensais;
+- Permitir controle administrativo de visibilidade por seÃ§Ãµes (feature flags).
 
----
+## 4. Escopo do Projeto
 
-## Configuração do Firebase
+### 4.1 IncluÃ­do no MVP
+- PÃ¡ginas pÃºblicas: InÃ­cio, AdoÃ§Ã£o (lista/detalhe), DoaÃ§Ãµes, HistÃ³rias/Resultados, Parceiros, Voluntariado/Lar temporÃ¡rio;
+- Admin: Login (Auth), Feature Flags, CRUD CÃ£es/Posts/Parceiros, atualizaÃ§Ã£o de Resultados do mÃªs, leitura/exportaÃ§Ã£o de Leads;
+- PWA bÃ¡sico: manifest, offline do shell, responsividade, SEO/OG;
+- Dados no Firestore; imagens no Cloud Storage (teto operacional de 5 GB).
 
-### Criação de projetos
-- `ong-caes-dev` (desenvolvimento)  
-- `ong-caes-prod` (produção)  
+### 4.2 Fora do Escopo Inicial (EvoluÃ§Ãµes Futuras)
+- Mapa interativo;
+- NotificaÃ§Ãµes push;
+- RelatÃ³rios/dashboards e fluxo de adoÃ§Ã£o avanÃ§ado.
 
-### Serviços ativados
-- **Auth:** email/senha para administradores  
-- **Firestore:** banco em `southamerica-east1`  
-- **Storage:** bucket em `southamerica-east1` (limite operacional de 5 GB)  
-- **Hosting:** servir o PWA  
+## 5. Requisitos Funcionais
+- **RFâ€‘001** â€“ Home (InÃ­cio): missÃ£o, CTA â€™Apoie nossa causaâ€™, destaques de cÃ£es (atÃ© 6), indicador de resultados do mÃªs.
+- **RFâ€‘002** â€“ AdoÃ§Ã£o: listagem filtrÃ¡vel por porte (P/M/G), idade e tags; paginaÃ§Ã£o; apenas status â€™disponÃ­velâ€™.
+- **RFâ€‘003** â€“ Detalhe do CÃ£o: galeria (atÃ© 3 fotos), descriÃ§Ã£o, atributos, CTA â€™Quero Adotarâ€™.
+- **RFâ€‘004** â€“ Lead de AdoÃ§Ã£o: formulÃ¡rio com dogId, nome, email, telefone e mensagem (â‰¥ 20 caracteres), persistido em /leads_adoption.
+- **RFâ€‘005** â€“ DoaÃ§Ãµes: exibir chave PIX e QR quando disponÃ­vel; lista de itens prioritÃ¡rios; textos de orientaÃ§Ã£o.
+- **RFâ€‘006** â€“ HistÃ³rias/Resultados: feed de /posts (rescue|care|story), exibiÃ§Ã£o de helpedCount de /results/{yyyymm}.
+- **RFâ€‘007** â€“ Parceiros: logos e links de apoiadores ativos.
+- **RFâ€‘008** â€“ Voluntariado/Lar TemporÃ¡rio: formulÃ¡rio de interesse persistido em /leads_volunteer.
+- **RFâ€‘009** â€“ Admin/AutenticaÃ§Ã£o: login via Firebase Auth (eâ€‘mail/senha); sessÃ£o persistente; logout.
+- **RFâ€‘010** â€“ Admin/Feature Flags: alternar visibilidade de seÃ§Ãµes (adoption, donations, lostPets, partners, stories, volunteers).
+- **RFâ€‘011** â€“ Admin/CRUD CÃ£es: cadastro/ediÃ§Ã£o/remoÃ§Ã£o, upload de fotos (atÃ© 3), status governa visibilidade.
+- **RFâ€‘012** â€“ Admin/CRUD Posts: type, title, summary, body, photos[], date; ordenaÃ§Ã£o por data desc.
+- **RFâ€‘013** â€“ Admin/CRUD Parceiros: name, logoUrl, siteUrl, active; validaÃ§Ã£o de URL; toggle ativo.
+- **RFâ€‘014** â€“ Admin/Resultados: atualizar /results/{yyyymm}.helpedCount e notes; refletir em Home/HistÃ³rias.
+- **RFâ€‘015** â€“ Admin/Leads: listar e exportar CSV de leads de adoÃ§Ã£o e voluntariado.
 
-### Configuração Web (`.env`)
-```env
-VITE_FB_API_KEY=...
-VITE_FB_AUTH_DOMAIN=...
-VITE_FB_PROJECT_ID=ong-caes-dev
-VITE_FB_STORAGE_BUCKET=ong-caes-dev.appspot.com
-VITE_FB_APP_ID=...
+## 6. Requisitos NÃ£o Funcionais
+- **RNFâ€‘001** â€“ Acessibilidade: contraste AA, foco visÃ­vel, navegaÃ§Ã£o por teclado, textos alternativos;
+- **RNFâ€‘002** â€“ Responsividade: mobileâ€‘first e grid fluido;
+- **RNFâ€‘003** â€“ Desempenho: LCP â‰¤ 2,5 s (4G), CLS â‰¤ 0,1, JS inicial â‰¤ 180 KB gzip; imagens WebP quando possÃ­vel; lazyâ€‘loading;
+- **RNFâ€‘004** â€“ SeguranÃ§a: regras de Firestore/Storage por papel; validaÃ§Ã£o e sanitizaÃ§Ã£o de entradas;
+- **RNFâ€‘005** â€“ PWA: manifest, service worker com prÃ©â€‘cache do shell e atualizaÃ§Ã£o assistida;
+- **RNFâ€‘006** â€“ SEO/OG: tÃ­tulos/descriÃ§Ãµes por rota, Open Graph, sitemap e robots;
+- **RNFâ€‘007** â€“ SustentaÃ§Ã£o de custos: uso consciente de leituras do Firestore; Storage atÃ© 5 GB com auditoria mensal.
+
+## 7. Modelagem do Sistema (Descritiva)
+ColeÃ§Ãµes do Firestore:
+- /flags (doc Ãºnico): adoption, donations, lostPets, partners, stories, volunteers â€” controla visibilidade das seÃ§Ãµes;
+- /dogs/{dogId}: name, age, size (P|M|G), tags[], status (disponÃ­vel|adotado|indisponÃ­vel), description, photos[], createdAt, updatedAt;
+- /posts/{postId}: type (rescue|care|story), title, summary, body (sanitizado), photos[], date;
+- /partners/{partnerId}: name, logoUrl, siteUrl, active;
+- /results/{yyyymm}: helpedCount, notes?;
+- /leads_adoption/{leadId}: dogId, name, phone, email, message, createdAt;
+- /leads_volunteer/{leadId}: name, phone, email, area, createdAt;
+- /settings/{docId}: contact, pixKey, donationNotes?.
+
+### 7.1 Limites e ParÃ¢metros TÃ©cnicos
+- Armazenamento total estimado: 5 GB;
+- MÃ¡ximo por foto: 5 MB;
+- MÃ¡ximo de fotos por cÃ£o: 3; bloqueio e mensagem amigÃ¡vel quando excedido;
+- Alerta no Admin quando uso estimado do Storage â‰¥ 80%.
+
+### 7.2 Tipos de Dados (resumo)
+- Dog: { id, name, age, size, tags[], status, description, photos[], createdAt, updatedAt }  
+- Post: { id, type, title, summary, body, photos[], date }  
+- Partner: { id, name, logoUrl, siteUrl, active }  
+- Result: { id, helpedCount, notes? }  
+- LeadAdoption: { id, dogId, name, phone, email, message, createdAt }  
+- LeadVolunteer: { id, name, phone, email, area, createdAt }  
+- Flags: { adoption, donations, lostPets, partners, stories, volunteers }  
+- Settings: { contact, pixKey, donationNotes? }  
+
+## 8. Arquitetura da SoluÃ§Ã£o
+
+### 8.1 Tecnologias e Componentes
+- Frontâ€‘end: React 18 + Vite + TypeScript, Tailwind CSS, Radix UI, Lucide;
+- Backâ€‘end (BaaS): Firebase Auth (admins), Firestore (dados), Cloud Storage (imagens), Firebase Hosting (deploy/CDN);
+- GerÃªncia de estado: React Query (dados) e Context (flags e sessÃ£o admin);
+- FormulÃ¡rios e validaÃ§Ã£o: reactâ€‘hookâ€‘form + Zod.
+
+### 8.2 Rotas e NavegaÃ§Ã£o
+- PÃºblico: /, /adocao, /adocao/:id, /doacoes, /historias, /parceiros, /voluntario;
+- Admin: /admin, /admin/flags, /admin/caes, /admin/posts, /admin/parceiros, /admin/leads, /admin/resultados;
+- Flags: se uma seÃ§Ã£o estiver desativada, o item Ã© ocultado e a rota redireciona para /. 
+
+### 8.3 PWA (Manifest + Service Worker)
+- Manifest com name, short_name, Ã­cones 192/512, theme/background, display=standalone;
+- Service Worker com prÃ©â€‘cache do shell, runtime cache para imagens (Staleâ€‘Whileâ€‘Revalidate) e estratÃ©gia networkâ€‘first para dados;
+- AtualizaÃ§Ã£o assistida: aviso â€™Nova versÃ£o disponÃ­velâ€™ com aÃ§Ã£o de atualizar.
+
+## 9. ConfiguraÃ§Ã£o do Firebase (Setup do Zero)
+
+### 9.1 CriaÃ§Ã£o de Projetos
+- ong-caes-dev (desenvolvimento)  
+- ong-caes-prod (produÃ§Ã£o)  
+
+### 9.2 ServiÃ§os Ativados
+- Authentication: eâ€‘mail/senha para administradores;
+- Firestore Database: regiÃ£o recomendada southamericaâ€‘east1;
+- Cloud Storage: bucket em southamericaâ€‘east1 (teto operacional 5 GB);
+- Hosting: publicaÃ§Ã£o do PWA.
+
+### 9.3 ConfiguraÃ§Ã£o Web (.env)
+VariÃ¡veis mÃ­nimas: VITE_FB_API_KEY, VITE_FB_AUTH_DOMAIN, VITE_FB_PROJECT_ID, VITE_FB_STORAGE_BUCKET, VITE_FB_APP_ID.
+
+### 9.4 Regras Iniciais do Firestore (resumo textual)
+- Leitura pÃºblica: dogs, posts, partners, results;
+- Leads: criaÃ§Ã£o pÃºblica; leitura/atualizaÃ§Ã£o/exclusÃ£o apenas por admin;
+- Flags e settings: leitura pÃºblica; escrita apenas por admin.
+
+### 9.5 Regras Iniciais do Storage (resumo textual)
+- Leitura pÃºblica dos objetos publicados;
+- Escrita apenas por usuÃ¡rios autenticados com papel admin nas pastas dogs/, posts/ e partners/.
+
+### 9.6 Estrutura de Dados Inicial (Semente)
+- /flags: { adoption: true, donations: true, lostPets: false, partners: true, stories: true, volunteers: true };
+- /settings: { contact: 'email/whatsapp', pixKey: 'chave pix', donationNotes?: 'texto' };
+- /dogs: cadastrar 2â€“3 exemplos; /posts: 2 exemplos; /partners: 2 exemplos.
+
+## 10. Design e Usabilidade
+
+### 10.1 Branding e Identidade Visual
+- Conceito: natureza e cuidado; paleta com verde (#2E7D32), acqua (#00A6A6) e acento laranja (#F59E0B); neutros Slate;
+- Tipografia: Inter (UI) e Merriweather (tÃ­tulos).
+
+### 10.2 Componentes e PadrÃµes de UI
+- BotÃµes (primÃ¡rio/ghost/link), Inputs/Labels, Select, Textarea, Checkbox/Radio, Cards, Badges (tags), Modais, Navbar, Footer, Toasts, Skeleton, EmptyState;
+- Mensagens padrÃµes de sucesso/erro, estados de carregamento e vazios significativos;
+- Acessibilidade: labels e ariaâ€‘*, foco visÃ­vel, atalhos (Esc para fechar modais, Enter para enviar).
+
+## 11. OperaÃ§Ã£o e ManutenÃ§Ã£o
+- Onboarding do administrador: criar usuÃ¡rio semente via console;
+- ExportaÃ§Ã£o CSV de leads;
+- Backup mensal das coleÃ§Ãµes crÃ­ticas e download dos CSV;
+- Limpeza mensal de imagens Ã³rfÃ£s e auditoria de uso do Storage;
+- MÃ©tricas: GA4 para eventos (view_dog, lead_*), Sentry opcional para erros.
+
+## 12. Riscos e MitigaÃ§Ãµes
+- Estouro do Storage (5 GB): compressÃ£o, limite de 5 MB por imagem e atÃ© 3 fotos por cÃ£o, auditoria mensal;
+- Leituras excessivas do Firestore: paginaÃ§Ã£o, cache no cliente (React Query) e Ã­ndices;
+- ConteÃºdo desatualizado: responsÃ¡vel editorial e calendÃ¡rio de revisÃ£o.
+
+## 13. Cronograma / Roadmap
+- **M1** â€“ PrototipaÃ§Ã£o e modelo de dados;
+- **M2** â€“ PÃ¡ginas pÃºblicas (InÃ­cio, AdoÃ§Ã£o, DoaÃ§Ãµes, HistÃ³rias, Parceiros, VoluntÃ¡rio);
+- **M3** â€“ Admin (login, flags, CRUDs, leads, resultados);
+- **M4** â€“ PWA (offline bÃ¡sico) e SEO/OG;
+- **M5** â€“ Testes finais e publicaÃ§Ã£o (Hosting).  
+PÃ³sâ€‘MVP: mapa interativo, notificaÃ§Ãµes push, relatÃ³rios/dashboards e fluxo de adoÃ§Ã£o avanÃ§ado.
+
+## 14. ConclusÃ£o
+O projeto consolida requisitos, arquitetura e operaÃ§Ã£o de um PWA voltado a ampliar o impacto de uma ONG de cÃ£es. Com tecnologia acessÃ­vel e de baixo custo, privilegia-se a entrega rÃ¡pida e a governanÃ§a simples do conteÃºdo, mantendo um caminho de evoluÃ§Ã£o para recursos mais sofisticados.
+
+## 15. Anexos (Exemplos Textuais)
+```json
+{ "name": "Luna", "age": 3, "size": "M", "tags": ["vacinado","dÃ³cil"], "status": "disponÃ­vel", "description": "Resgatada, Ã³tima com crianÃ§as.", "photos": ["https://.../dogs/123/photo_1.jpg"], "createdAt": "", "updatedAt": "" }
+
+{ "dogId": "123", "name": "JoÃ£o Silva", "phone": "(43) 99999-9999", "email": "joao@email.com", "message": "Quero conhecer a Luna.", "createdAt": "" }
+
+{ "adoption": true, "donations": true, "lostPets": false, "partners": true, "stories": true, "volunteers": true }
 ```
-
-### Regras iniciais do Firestore
-```js
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /dogs/{docId} { allow read: if true; allow write: if request.auth != null && request.auth.token.admin == true; }
-    match /posts/{docId} { allow read: if true; allow write: if request.auth != null && request.auth.token.admin == true; }
-    match /partners/{docId} { allow read: if true; allow write: if request.auth != null && request.auth.token.admin == true; }
-    match /results/{docId} { allow read: if true; allow write: if request.auth != null && request.auth.token.admin == true; }
-    match /leads_adoption/{docId} { allow create: if true; allow read, update, delete: if request.auth != null && request.auth.token.admin == true; }
-    match /leads_volunteer/{docId} { allow create: if true; allow read, update, delete: if request.auth != null && request.auth.token.admin == true; }
-    match /flags/{docId} { allow read: if true; allow write: if request.auth != null && request.auth.token.admin == true; }
-    match /settings/{docId} { allow read: if true; allow write: if request.auth != null && request.auth.token.admin == true; }
-  }
-}
-```
-
-### Regras iniciais do Storage
-```js
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /dogs/{dogId}/{allPaths=**} { allow read: if true; allow write: if request.auth != null && request.auth.token.admin == true; }
-    match /posts/{postId}/{allPaths=**} { allow read: if true; allow write: if request.auth != null && request.auth.token.admin == true; }
-    match /partners/{partnerId}/{allPaths=**} { allow read: if true; allow write: if request.auth != null && request.auth.token.admin == true; }
-  }
-}
-```
-
-### Estrutura de dados inicial
-- `/flags`: `{ adoption: true, donations: true, lostPets: false, partners: true, stories: true, volunteers: true }`  
-- `/settings`: `{ contact: "email/whatsapp", pixKey: "chave pix", donationNotes: "texto opcional" }`  
-- `/dogs`: 2–3 cães exemplo  
-- `/posts`: 2 posts exemplo  
-- `/partners`: 2 parceiros exemplo  
-
-## 2) Branding e design de UI
-- **Conceito:** natureza + cuidado. Paleta inspirada em **verde** (confiança/vida), **terra** (acolhimento) e **azul-acqua** (esperança). Contraste AA.
-- **Paleta (hex):**
-  - Primária: `#2E7D32` (verde ONG) / hover `#27692B`
-  - Secundária: `#00A6A6` (acqua) / hover `#008F8F`
-  - Acento: `#F59E0B` (apoios/avisos)
-  - Sucesso: `#16A34A` | Erro: `#DC2626` | Aviso: `#D97706`
-  - Neutros (Slate): `#0F172A` (900), `#334155` (700), `#94A3B8` (400), `#F1F5F9` (50), fundo `#FFFFFF`
-- **Tipografia:** **Inter** (UI) e **Merriweather** (títulos opcionais) – via Google Fonts.
-- **Componentes base (biblioteca do projeto):**
-  - Botão (primário/ghost/link), Input + Label + HelperText, Select, Textarea, Checkbox/Radio, Card, Badge (tags), Modal/Sheet, Navbar, Footer, Banner (doações), Toast, Skeleton, EmptyState.
-- **Layout:** Header com logo/CTA “Apoie”; Navbar (condicional às flags); grid de cards 1–2–3 colunas (xs–md–lg); Footer com contatos/PIX.
-
----
-
-## 3) Itens criados de UI
-- **Design tokens:** cores, espaçamentos (4/8/12/16px), radius 12–16px, sombras suaves.  
-- **Páginas:** 
-  - **Início:** hero + CTA, “Ajudamos X animais este mês”, destaques de cães (6).  
-  - **Adoção:** lista (filtros: porte, idade, tags), detalhe (galeria até 3 fotos, descrição, CTA).  
-  - **Doações:** PIX (chave + QR) e itens prioritários.  
-  - **Histórias/Resultados:** feed de posts + contador do mês.  
-  - **Parceiros:** logos clicáveis.  
-  - **Voluntário/Lar Temporário:** formulário.
-- **Admin:** login; **Feature Flags**; CRUD Cães/Posts/Parceiros; Resultados do mês; Leads (listagem/export CSV).
-
----
-
-## 4) Boas práticas e definições
-- **Acessibilidade:** foco visível; labels/aria; contraste AA; navegação por teclado.  
-- **Responsividade:** mobile-first; breakpoints Tailwind default.  
-- **Desempenho:** LCP ≤ 2.5s; CLS ≤ 0.1; JS inicial ≤ 180KB gzip; imagens **WebP** quando possível; lazy-loading.  
-- **Segurança:** regras Firestore/Storage por papel; validação Zod; sanitização básica de HTML nos posts (permitir apenas blocos seguros).  
-- **SEO/OG:** metatags por rota; OG image padrão; `sitemap.xml` e `robots.txt`.
-- **Adoção de padrões de commit, PR template e lint-staged.**
-
----
-
-## 5) Firebase – configuração
-- **Ambientes:** `dev` e `prod` (dois projetos Firebase).  
-- **Variáveis (.env):** `VITE_FB_API_KEY`, `VITE_FB_AUTH_DOMAIN`, `VITE_FB_PROJECT_ID`, `VITE_FB_STORAGE_BUCKET`, `VITE_FB_APP_ID`.  
-- **Firestore (coleções – mantidas):** `flags`, `dogs`, `posts`, `partners`, `results`, `leads_adoption`, `leads_volunteer`, `settings`.  
-- **Índices (exemplos):**
-  - `dogs`: `status asc, createdAt desc`, `status asc, size asc`, `status asc, tags asc` (consultas combinadas).  
-  - `posts`: `type asc, date desc`.  
-  - `partners`: `active asc, name asc`.
-- **Regras Firestore (resumo):**
-  - Público: `read` limitado nas coleções públicas; leads: `create` liberado; leads `read` somente admin; `flags/settings` apenas admin.  
-- **Regras Storage:** `write` só admin; `read` público para imagens publicadas.
-- **Sementes (JSON inicial):** `flags` (defaults abaixo), `settings` (PIX + contatos), 3 cães, 2 posts, 2 parceiros.
-
----
-
-## 6) Modelo de dados e tipos TypeScript
-```ts
-export type DogSize = 'P' | 'M' | 'G';
-export type DogStatus = 'disponível' | 'adotado' | 'indisponível';
-export type PostType = 'rescue' | 'care' | 'story';
-
-export interface Dog {
-  id: string;
-  name: string;
-  age: number;            // em anos (frações permitidas)
-  size: DogSize;
-  tags: string[];         // ex.: ['vacinado','castrado','dócil']
-  status: DogStatus;
-  description: string;
-  photos: string[];       // max 3 URLs
-  createdAt: number;      // Timestamp ms
-  updatedAt: number;
-}
-
-export interface Post {
-  id: string;
-  type: PostType;
-  title: string;
-  summary: string;
-  body: string;           // texto sanitizado
-  photos: string[];       // opcional
-  date: number;
-}
-
-export interface Partner { id: string; name: string; logoUrl: string; siteUrl: string; active: boolean; }
-export interface Result { id: string; helpedCount: number; notes?: string; }
-export interface LeadAdoption { id: string; dogId: string; name: string; phone: string; email: string; message: string; createdAt: number; }
-export interface LeadVolunteer { id: string; name: string; phone: string; email: string; area: string; createdAt: number; }
-export interface Flags { adoption: boolean; donations: boolean; lostPets: boolean; partners: boolean; stories: boolean; volunteers: boolean; }
-export interface Settings { contact: string; pixKey: string; donationNotes?: string; }
-```
-
----
-
-## 7) Limites técnicos e alertas
-- **Teto de Storage:** **5 GB** (operacional).  
-- **Limite por foto (upload):** **máx. 5 MB** (validação no client e no Storage).  
-- **Máx. fotos por cão:** **3** (UI e schema reforçam).  
-- **Alertas ao admin:** 
-  - Se `fotos > 3` → bloquear e exibir mensagem.  
-  - Se arquivo > 5 MB → bloquear e sugerir compressão.  
-  - **Aviso de quota:** quando estimado **≥ 80%** de 5 GB, banner no Admin (“limpar imagens”/“comprimir”).
-
----
-
-## 8) Estados de UI, UX writing e criatividade
-- **Estados globais:** `carregando` (skeleton), `vazio` (“Ainda não há registros aqui”), `erro` (“Não foi possível carregar. Tentar novamente?”).  
-- **Mensagens de sucesso:** “Recebemos sua mensagem. Em breve a ONG entra em contato.”  
-- **Doações:** “Sua ajuda salva vidas. Use a chave PIX abaixo.”  
-- **Adoção (empty):** “Nenhum cão disponível no momento. Volte em breve ou torne-se lar temporário.”  
-- **Acessibilidade extra:** atalhos – `Esc` fecha modais, `Enter` envia formulários; foco retorna ao botão de origem.  
-- **Toasts:** submissões; cópia da chave PIX; alternância de flags.  
-- **Banners sazonais:** campanha de ração, mutirão de castração (configurável em `settings`).
-
----
-
-## 9) Rotas e navegação
-- **Público:**
-  - `/` (Início) • `/adocao` • `/adocao/:id` • `/doacoes` • `/historias` • `/parceiros` • `/voluntario`
-- **Admin (protegido por Auth + role):**
-  - `/admin` (dashboard) • `/admin/flags` • `/admin/caes` • `/admin/posts` • `/admin/parceiros` • `/admin/leads` • `/admin/resultados`
-- **Comportamento de flags:** se seção **off**, esconder menu e **redirigir** rota para `/`.
-- **Sitemap/robots:** gerados no build (script).
-
----
-
-## 10) PWA: Manifest e Service Worker
-- **Manifest (exemplo):**
-  ```json
-  {
-    "name": "ONG de Cães",
-    "short_name": "ONG Cães",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#2E7D32",
-    "icons": [
-      {"src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
-      {"src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
-      {"src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable any"}
-    ]
-  }
-  ```
-- **Service Worker:**
-  - **Pré-cache** do shell. **Runtime cache** p/ imagens (Stale-While-Revalidate).  
-  - **Dados**: **network-first** com fallback a cache quando possível.  
-  - **Atualização:** toast “Nova versão disponível” + botão **Atualizar** (usa `skipWaiting` + `clientsClaim`).
-
----
-
-## 11) Telemetria e métricas
-- **GA4**: `view_dog`, `lead_adoption_sent`, `lead_volunteer_sent`, `pix_copy_click`, `donation_view`.  
-- **Sentry (opcional)**: captura de erros em produção.  
-- **Relatórios internos**: contagem semanal de leads; `results.helpedCount` mensal.
-
----
-
-## 12) CI/CD, domínio e ambientes
-- **GitHub Actions**: jobs de `lint`, `typecheck`, `build` e `deploy` (Firebase Hosting).  
-- **Preview Channels** por PR para validação da ONG.  
-- **Segredos** no repositório para chaves Firebase/GA4/Sentry.  
-- **Domínio**: padrão do Firebase inicialmente; customização futura.  
-- **Cache headers**: estáticos longos; HTML sem cache.
-
----
-
-## 13) Administração e operação
-- **Onboarding**: criar usuário admin semente (console) e registrar no guia.  
-- **Export CSV**: botão nos **Leads** (adoção/voluntário).  
-- **Limpeza de órfãos**: rotina mensal (manual) – ver lista de arquivos sem referência.  
-- **Backups**: export mensal do Firestore (coleções críticas) + leads CSV.  
-- **Guia do Admin**: login, publicar conteúdo, flags, **boas práticas de fotos (≤ 5MB; 3 por cão)**.
-
----
-
-## 15) Riscos e mitigação
-- Estouro de Storage (5 GB) → compressão, 5MB por foto, máx. 3 fotos/cão, auditoria mensal.  
-- Leituras elevadas → paginação, cache React Query, índices.  
-- Conteúdo desatualizado → responsável editorial + calendário.
-
----
-
-### Pendências mínimas para iniciar repositório
-1) **Chave PIX** e texto (`settings`).  
-2) **Logo/ícones** (posso gerar placeholders).  
-3) **Firebase**: `projectId` dev e prod.  
-4) **Contatos** para `settings.contact`.
