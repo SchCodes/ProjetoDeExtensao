@@ -1,3 +1,5 @@
+- **Relatório Bimestral** → [Editar no docs](https://docs.google.com/document/d/1Ehm5pNtgfXpiBTTUv7WtIUJnsVgsmWhxlTFF8AnHJ9g/edit?tab=t.0)
+
 # INSTITUTO FEDERAL DO PARANÁ  
 ## CAMPUS TELÊMACO BORBA  
 ### TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS  
